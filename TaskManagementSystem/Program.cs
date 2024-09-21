@@ -15,6 +15,7 @@ builder.Services.AddDbContext<MyDbContext>(options => options.UseSqlServer(build
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IStatusRepository, StatusRepository>();
+builder.Services.AddScoped<IPriorityRepository, PriorityRepository>();
 
 var app = builder.Build();
 

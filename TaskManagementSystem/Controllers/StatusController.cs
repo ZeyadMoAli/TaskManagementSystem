@@ -35,7 +35,7 @@ public class StatusController: ControllerBase
     }
 
     [HttpGet("GetStatusByName/{name}")]
-    public async Task<IActionResult> GetStatusByName(string name)
+    public async Task<IActionResult> GetStatusByName([FromBody]string name)
     {
         var status = await _statusRepository.GetStatusByNameAsync(name);
         if(status == null)
