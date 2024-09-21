@@ -66,6 +66,15 @@ public class CategoryController : ControllerBase
         return Ok(category.ToDto());
     }
 
+    [HttpDelete("DeleteCategory/{id}")]
+    public async Task<IActionResult> DeleteCategory(int id)
+    {
+        var category = await _categoryRepository.DeleteCategoryAsync(id);
+        if(category == null)
+            return NotFound();
+        return NoContent();
+    }
+
 
 
 }

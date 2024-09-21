@@ -33,8 +33,12 @@ public class UserRepository: IUserRepository
     }
     
 
-    public async Task<User> CreateUserAsync(User user)
+    public async Task<User?> CreateUserAsync(User user)
     {
+        
+        if(await IsEmailTakenAsync(user.Email) )
+            return null;
+        
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
 
