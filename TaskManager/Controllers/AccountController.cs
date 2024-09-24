@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Models;
 using TaskManager.DTOs.Account;
+using TaskManager.Interfaces;
 
 namespace TaskManager.Controllers
 {
@@ -11,11 +12,12 @@ namespace TaskManager.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-
-        public AccountController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly ITokenService _tokenService;
+        public AccountController(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, ITokenService tokenService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _tokenService = tokenService;
         }
 
         [HttpPost("Register")]
@@ -48,7 +50,14 @@ namespace TaskManager.Controllers
 
                     var roleAssignResult = await _userManager.AddToRoleAsync(user, "User");
                     if (roleAssignResult.Succeeded)
-                        return Ok(new { message = "User registered successfully" });
+                        return Ok(
+                            new NewUserDto
+                            {
+                                UserName = user.UserName,
+                                Email = user.Email,
+                                Token = _tokenService.CreateToken(user)
+                            }
+                            );
                     else
                         return BadRequest(roleAssignResult.Errors);
                 }

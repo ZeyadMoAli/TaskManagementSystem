@@ -28,7 +28,7 @@ public class StatusRepository: IStatusRepository
 
     public async Task<Status?> GetStatusByNameAsync(string name)
     {
-        return await _context.Statuses.FirstOrDefaultAsync(s=>s.Name.ToLower()==name.ToLower());
+        return await _context.Statuses.FirstOrDefaultAsync(s=>s.Name.Equals(name,StringComparison.OrdinalIgnoreCase));
     }
 
     public async Task<Status?> CreateStatusAsync(Status status)
@@ -51,7 +51,7 @@ public class StatusRepository: IStatusRepository
             return null;
         
         var checkName = await GetStatusByNameAsync(status.Name);
-        if(checkName != null)
+        if( statusToUpdate.Name!=status.Name &&  checkName != null)
             return null;
         statusToUpdate.Name = status.Name;
         await _context.SaveChangesAsync();
